@@ -25,6 +25,25 @@ public class Matrix {
         return matrix[position.getRow()][position.getColum()];
     }
     
+    public int getHeight(){
+        return matrix[0].length;
+    }
     
+    public int getWidth(){
+        return matrix.length;
+    }
+    
+    public boolean isPositionValid(Position position){
+         return !(position.getRow() < 0 || position.getColum() < 0 
+                 || position.getRow() >= getWidth() || position.getColum() >= getHeight());
+    }
+    
+    public Position getStartPosition(){
+        return new Position(0, 0);
+    }
+    
+    public Position getEndPosition(){
+        return new Position(getWidth()-1, getHeight()-1);
+    }
     
 }

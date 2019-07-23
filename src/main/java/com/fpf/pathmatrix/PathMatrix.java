@@ -26,18 +26,15 @@ public class PathMatrix {
         this.path = new ArrayList<>();
         this.visited = new ArrayList<>();
 
+        createPath(matrix.getStartPosition());
     }
 
     public int getIterarions() {
         return iterations;
     }
 
-    private static boolean isValidPosition(int x, int y) {
-        if (x < 0 || y < 0 || x >= N || y >= N) {
-            return false;
-        }
-
-        return true;
+    private boolean isFinalPosition(Position position) {
+        return matrix.getEndPosition().equals(position);
     }
 
     private boolean avaliaVizinho(Direction direction, Position position) {
@@ -45,47 +42,45 @@ public class PathMatrix {
 
         direction.setN(N);
 
-        if (direction.isValid(position) && !visited.contains(vizinho)) {
-            return true;
-        }
-
-        return false;
+        return direction.isValid(position) && !visited.contains(vizinho) && matrix.getValue(vizinho) == 0;
     }
 
-    private List<Position> createPath(int x, int y) {
-
-        Position position = new Position(x, y);
+    private List<Position> createPath(Position actualPosition) {
 
         iterations++;
 
-        if (x == N - 1 && y == N - 1) {
-            path.add(position);
+        if (isFinalPosition(actualPosition)) {
+            path.add(actualPosition);
             return path;
         }
 
-        this.visited.add(position);
+        this.visited.add(actualPosition);
 
-        if (isValidPosition(x, y) && this.matrix.getValue(position) == 0) {
-            path.add(position);
+        if (matrix.isPositionValid(actualPosition) && this.matrix.getValue(actualPosition) == 0) {
+            path.add(actualPosition);
 
-            if (avaliaVizinho(Direction.DOWN, position)) {
-                createPath(Direction.DOWN.neighbor(position).getRow(), Direction.DOWN.neighbor(position).getColum());
+            if (avaliaVizinho(Direction.DOWN, actualPosition)) {
+                Position neighbor = Direction.DOWN.neighbor(actualPosition);
+                createPath(neighbor);
             }
 
-            if (avaliaVizinho(Direction.UP, position)) {
-                createPath(Direction.UP.neighbor(position).getRow(), Direction.UP.neighbor(position).getColum());
+            if (avaliaVizinho(Direction.UP, actualPosition)) {
+                Position neighbor = Direction.UP.neighbor(actualPosition);
+                createPath(neighbor);
             }
 
-            if (avaliaVizinho(Direction.RIGHT, position)) {
-                createPath(Direction.RIGHT.neighbor(position).getRow(), Direction.RIGHT.neighbor(position).getColum());
+            if (avaliaVizinho(Direction.RIGHT, actualPosition)) {
+                Position neighbor = Direction.RIGHT.neighbor(actualPosition);
+                createPath(neighbor);
             }
 
-            if (avaliaVizinho(Direction.LEFT, position)) {
-                createPath(Direction.LEFT.neighbor(position).getRow(), Direction.LEFT.neighbor(position).getColum());
+            if (avaliaVizinho(Direction.LEFT, actualPosition)) {
+                Position neighbor = Direction.LEFT.neighbor(actualPosition);
+                createPath(neighbor);
             }
         }
 
-        this.visited.remove(position);
+        this.visited.remove(actualPosition);
 
         return path;
     }
@@ -100,8 +95,6 @@ public class PathMatrix {
         };
 
         PathMatrix findPath = new PathMatrix(matrix);
-
-        findPath.createPath(0, 0);
 
         System.out.println("path " + findPath.path);
         System.out.println("iterations " + findPath.getIterarions());
