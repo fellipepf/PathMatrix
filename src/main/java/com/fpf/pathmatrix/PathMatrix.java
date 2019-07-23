@@ -44,14 +44,14 @@ public class PathMatrix {
         
         return direction.isValid(position) && !visited.contains(vizinho) && matrix.getValue(vizinho) == 0;
     }
-
-    private List<Position> createPath(Position actualPosition) {
+    
+    private void createPath(Position actualPosition) {
 
         iterations++;
 
         if (isFinalPosition(actualPosition)) {
             path.add(actualPosition);
-            return path;
+            return;
         }
 
         this.visited.add(actualPosition);
@@ -82,7 +82,7 @@ public class PathMatrix {
 
         this.visited.remove(actualPosition);
 
-        return path;
+        return;
     }
     
     public List<Position> getPath(){
