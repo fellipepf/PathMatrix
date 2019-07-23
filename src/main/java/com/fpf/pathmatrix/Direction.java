@@ -32,7 +32,7 @@ public enum Direction {
 
         @Override
         public boolean isValid(Position position) {
-            return neighbor(position).getColum() < N;
+            return neighbor(position).getColum() < height;
         }
 
     },
@@ -58,7 +58,7 @@ public enum Direction {
 
         @Override
         public boolean isValid(Position position) {
-            return neighbor(position).getRow() < N;
+            return neighbor(position).getRow() < width;
         }
 
     };
@@ -67,10 +67,15 @@ public enum Direction {
 
     public abstract boolean isValid(Position position);
 
-    private static int N;
+    private static int width;
+    private static int height;
 
-    public void setN(int N) {
-        this.N = N;
+    public void setWidth(int width) {
+        Direction.width = width;
+    }
+    
+    public void setHeight(int height){
+        Direction.height = height;
     }
 
 }

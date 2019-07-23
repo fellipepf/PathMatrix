@@ -18,7 +18,6 @@ public class PathMatrix {
     private List<Position> path;
     private List<Position> visited;
 
-    private static int N = 5;
     private int iterations = 0;
 
     public PathMatrix(int arrayMatrix[][]) {
@@ -29,7 +28,7 @@ public class PathMatrix {
         createPath(matrix.getStartPosition());
     }
 
-    public int getIterarions() {
+    public int getIterations() {
         return iterations;
     }
 
@@ -37,11 +36,12 @@ public class PathMatrix {
         return matrix.getEndPosition().equals(position);
     }
 
-    private boolean avaliaVizinho(Direction direction, Position position) {
+    private boolean isPossibleNeighbor(Direction direction, Position position) {
         Position vizinho = direction.neighbor(position);
 
-        direction.setN(N);
-
+        direction.setWidth(matrix.getWidth());
+        direction.setHeight(matrix.getHeight());
+        
         return direction.isValid(position) && !visited.contains(vizinho) && matrix.getValue(vizinho) == 0;
     }
 
@@ -59,22 +59,22 @@ public class PathMatrix {
         if (matrix.isPositionValid(actualPosition) && this.matrix.getValue(actualPosition) == 0) {
             path.add(actualPosition);
 
-            if (avaliaVizinho(Direction.DOWN, actualPosition)) {
+            if (isPossibleNeighbor(Direction.DOWN, actualPosition)) {
                 Position neighbor = Direction.DOWN.neighbor(actualPosition);
                 createPath(neighbor);
             }
 
-            if (avaliaVizinho(Direction.UP, actualPosition)) {
+            if (isPossibleNeighbor(Direction.UP, actualPosition)) {
                 Position neighbor = Direction.UP.neighbor(actualPosition);
                 createPath(neighbor);
             }
 
-            if (avaliaVizinho(Direction.RIGHT, actualPosition)) {
+            if (isPossibleNeighbor(Direction.RIGHT, actualPosition)) {
                 Position neighbor = Direction.RIGHT.neighbor(actualPosition);
                 createPath(neighbor);
             }
 
-            if (avaliaVizinho(Direction.LEFT, actualPosition)) {
+            if (isPossibleNeighbor(Direction.LEFT, actualPosition)) {
                 Position neighbor = Direction.LEFT.neighbor(actualPosition);
                 createPath(neighbor);
             }
@@ -82,6 +82,10 @@ public class PathMatrix {
 
         this.visited.remove(actualPosition);
 
+        return path;
+    }
+    
+    public List<Position> getPath(){
         return path;
     }
 
@@ -97,7 +101,7 @@ public class PathMatrix {
         PathMatrix findPath = new PathMatrix(matrix);
 
         System.out.println("path " + findPath.path);
-        System.out.println("iterations " + findPath.getIterarions());
+        System.out.println("iterations " + findPath.getIterations());
     }
 
 }
