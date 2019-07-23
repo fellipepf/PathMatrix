@@ -16,19 +16,22 @@ public class PathMatrix {
 
     private Matrix matrix;
     private List<Position> path;
-    
+    private List<Position> visited;
+
     private static int N = 5;
     private int iterations = 0;
 
-    public PathMatrix(int arrayMatrix[][]){
-       this.matrix = new Matrix(arrayMatrix);
-       this.path = new ArrayList<>();
-        
+    public PathMatrix(int arrayMatrix[][]) {
+        this.matrix = new Matrix(arrayMatrix);
+        this.path = new ArrayList<>();
+        this.visited = new ArrayList<>();
+
     }
 
-    public int getIterarions(){
+    public int getIterarions() {
         return iterations;
     }
+
     private static boolean isValidPosition(int x, int y) {
         if (x < 0 || y < 0 || x >= N || y >= N) {
             return false;
@@ -36,46 +39,53 @@ public class PathMatrix {
 
         return true;
     }
-    
-    private List<Position> createPath(int x, int y, boolean visited[][]) {
-        
+
+    private boolean avaliaVizinho(Direction direction, Position position) {
+        Position vizinho = direction.neighbor(position);
+
+        direction.setN(N);
+
+        if (direction.isValid(position) && !visited.contains(vizinho)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private List<Position> createPath(int x, int y) {
+
         Position position = new Position(x, y);
-        
+
         iterations++;
-        
+
         if (x == N - 1 && y == N - 1) {
             path.add(position);
             return path;
         }
 
-        visited[x][y] = true;
+        this.visited.add(position);
 
         if (isValidPosition(x, y) && this.matrix.getValue(position) == 0) {
             path.add(position);
 
-            
-            if (x + 1 < N && !visited[x + 1][y]) {
-                createPath(x + 1, y, visited);
+            if (avaliaVizinho(Direction.DOWN, position)) {
+                createPath(Direction.DOWN.neighbor(position).getRow(), Direction.DOWN.neighbor(position).getColum());
             }
 
-            // go up (x, y) --> (x - 1, y)
-            if (x - 1 >= 0 && !visited[x - 1][y]) {
-                createPath( x - 1, y, visited);
+            if (avaliaVizinho(Direction.UP, position)) {
+                createPath(Direction.UP.neighbor(position).getRow(), Direction.UP.neighbor(position).getColum());
             }
 
-            // go right (x, y) --> (x, y + 1)
-            if (Direction.RIGHT.neighbor(position).getColum() < N && !visited[x][y + 1] ) {
-                createPath(x, y + 1, visited);
+            if (avaliaVizinho(Direction.RIGHT, position)) {
+                createPath(Direction.RIGHT.neighbor(position).getRow(), Direction.RIGHT.neighbor(position).getColum());
             }
 
-            // go left (x, y) --> (x, y - 1)
-            if (y - 1 >= 0 && !visited[x][y - 1]) {
-                createPath(x, y - 1, visited);
+            if (avaliaVizinho(Direction.LEFT, position)) {
+                createPath(Direction.LEFT.neighbor(position).getRow(), Direction.LEFT.neighbor(position).getColum());
             }
         }
 
-        visited[x][y] = false;
-        
+        this.visited.remove(position);
 
         return path;
     }
@@ -91,12 +101,10 @@ public class PathMatrix {
 
         PathMatrix findPath = new PathMatrix(matrix);
 
-        boolean[][] visited = new boolean[N][N];
-
-        findPath.createPath( 0, 0, visited);
+        findPath.createPath(0, 0);
 
         System.out.println("path " + findPath.path);
-        System.out.println("iterations "+findPath.getIterarions());
+        System.out.println("iterations " + findPath.getIterarions());
     }
 
 }

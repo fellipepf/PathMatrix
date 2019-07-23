@@ -17,12 +17,22 @@ public enum Direction {
             return new Position(position.getRow(), position.getColum() - 1);
         }
 
+        @Override
+        public boolean isValid(Position position) {
+            return neighbor(position).getColum() >= 0;
+        }
+
     },
     //right (x, y) --> (x, y + 1)
     RIGHT {
         @Override
         public Position neighbor(Position position) {
             return new Position(position.getRow(), position.getColum() + 1);
+        }
+
+        @Override
+        public boolean isValid(Position position) {
+            return neighbor(position).getColum() < N;
         }
 
     },
@@ -33,6 +43,11 @@ public enum Direction {
             return new Position(position.getRow() - 1, position.getColum());
         }
 
+        @Override
+        public boolean isValid(Position position) {
+            return neighbor(position).getRow() >= 0;
+        }
+
     },
     //down (x, y) --> (x + 1, y)
     DOWN {
@@ -41,8 +56,21 @@ public enum Direction {
             return new Position(position.getRow() + 1, position.getColum());
         }
 
+        @Override
+        public boolean isValid(Position position) {
+            return neighbor(position).getRow() < N;
+        }
+
     };
 
     public abstract Position neighbor(Position position);
+
+    public abstract boolean isValid(Position position);
+
+    private static int N;
+
+    public void setN(int N) {
+        this.N = N;
+    }
 
 }
